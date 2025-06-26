@@ -43,7 +43,7 @@ update_follower () {
   echo_run git pull
 
   # 2 · Apply the patch. Do not use 3way because commit history is not in common
-  if ! git apply --reject --whitespace=nowarn "$PATCH_FILE"; then
+  if ! git apply --whitespace=nowarn "$PATCH_FILE"; then
     echo "‼️  Some hunks could not be merged automatically."
     echo; echo "Use a different terminal to fix files before continuing"
     pause
