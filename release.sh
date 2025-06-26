@@ -12,7 +12,7 @@ SECOND_DIR="${APP_NAME}_Second"
 THIRD_DIR="${APP_NAME}_Third"
 VERSION_FILE="Config.xcconfig"
 MARKETING_KEY="LOOP_FOLLOW_MARKETING_VERSION"
-DEV_BRANCH="dev"
+DEV_BRANCH="local_test_release"
 MAIN_BRANCH="main"
 PATCH_DIR="../${APP_NAME}_update_patches"
 # ---------------------------------------
@@ -34,14 +34,19 @@ update_follower () {
   echo; echo "🔄  Updating $DIR …"
   cd "$DIR"
 
+  echo; echo "If there are custom changes needed to the patch, make the change before continuing"
+  pause
+
   # 1 · Make sure we’re on a clean, up-to-date main
   echo_run git switch "$MAIN_BRANCH"
   echo_run git fetch
   echo_run git pull
 
-  # 2 · Apply the patch with 3-way fallback
-  if ! git apply --3way  --whitespace=nowarn "$PATCH_FILE"; then
+  # 2 · Apply the patch. Do not use 3way because commit history is not in common
+  if ! git apply --reject --whitespace=nowarn "$PATCH_FILE"; then
     echo "‼️  Some hunks could not be merged automatically."
+    echo; echo "Use a different terminal to fix files before continuing"
+    pause
   fi
 
   # 3 · Pause if any conflict markers remain
